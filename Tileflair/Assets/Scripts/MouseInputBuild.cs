@@ -8,12 +8,13 @@ public class MouseInputBuild : MonoBehaviour
     GameObject m_startObj;
     Vector3 m_posDown;
     Vector3 m_posUp;
+    GridManager m_grid;
     bool m_mousedown = false;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        m_grid = GameObject.Find("GridManager").GetComponent<GridManager>();
     }
 
     // Update is called once per frame
@@ -21,17 +22,20 @@ public class MouseInputBuild : MonoBehaviour
     {
         if (m_mousedown)
         {
-            m_startObj.transform.LookAt(Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 10)));
+            m_startObj.transform.LookAt(m_grid.FindClosestPoint(Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 10))));
         }
         if (Input.GetMouseButtonDown(0))
         {
             m_posDown = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 10));
+            m_posDown = m_grid.FindClosestPoint(m_posDown);
             m_startObj = GameObject.Instantiate(m_point, m_posDown, Quaternion.identity);
             m_mousedown = true;
         }
         if (Input.GetMouseButtonUp(0))
         {
             m_posUp = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 10));
+            m_posUp = m_grid.FindClosestPoint(m_posUp);
+
 
             float distance = Vector3.Distance(m_posDown, m_posUp);
             int noObjects =  (int)(distance / m_point.transform.localScale.x);
