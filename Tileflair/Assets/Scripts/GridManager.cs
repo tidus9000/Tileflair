@@ -32,6 +32,11 @@ public class GridManager : MonoBehaviour
         
     }
 
+    /// <summary>
+    /// Finds the closest point on the grid to a given point in world space
+    /// </summary>
+    /// <param name="_inputPoint">The given position in world space</param>
+    /// <returns></returns>
     public Vector3 FindClosestPoint(Vector3 _inputPoint)
     {
         Vector3 output = Vector3.positiveInfinity;
