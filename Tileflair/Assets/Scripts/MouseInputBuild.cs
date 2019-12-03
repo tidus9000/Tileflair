@@ -57,11 +57,6 @@ public class MouseInputBuild : MonoBehaviour
         switch (m_manager.GetState())
         {
             case GameManager.State.BUILD:
-                if (m_mousedown)
-                {
-                    //rotate the initial object to where the mouse is pointing
-                    m_startObj.transform.LookAt(m_grid.FindClosestPoint(Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 10))));
-                }
                 if (Input.GetMouseButtonDown(0))
                 {
                     //Spawn an initial wall object on the grid where the user has clicked
@@ -71,6 +66,14 @@ public class MouseInputBuild : MonoBehaviour
                     m_wall.transform.parent = m_room.transform;
                     m_startObj = GameObject.Instantiate(m_point, m_posDown, Quaternion.identity, m_wall.transform);
                     m_mousedown = true;
+                }
+                if (m_mousedown)
+                {
+                    //rotate the initial object to where the mouse is pointing
+                    if (m_startObj)
+                    {
+                        m_startObj.transform.LookAt(m_grid.FindClosestPoint(Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 10))));
+                    }
                 }
                 if (Input.GetMouseButtonUp(0))
                 {
@@ -110,7 +113,7 @@ public class MouseInputBuild : MonoBehaviour
                     Destroy(m_wall);
                     target = m_room.transform;
                 }
-                //What i want
+                //What i want:
                 //When a user clicks, holds and drags, they should be able to rotate the room model.
                 if (target)
                 {
