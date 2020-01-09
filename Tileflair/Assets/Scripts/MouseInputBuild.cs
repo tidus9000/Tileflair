@@ -32,6 +32,7 @@ public class MouseInputBuild : MonoBehaviour
     float velocityY = 0.0f;
 
 
+
     // Start is called before the first frame update
     void Start()
     {
@@ -117,6 +118,7 @@ public class MouseInputBuild : MonoBehaviour
                 //When a user clicks, holds and drags, they should be able to rotate the room model.
                 if (target)
                 {
+
                     if (Input.GetMouseButton(0))
                     {
                         velocityX += (xSpeed * Input.GetAxis("Mouse X") * distance * 0.02f) * Time.deltaTime;
