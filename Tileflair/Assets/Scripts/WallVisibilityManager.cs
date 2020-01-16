@@ -50,7 +50,6 @@ public class WallVisibilityManager : MonoBehaviour
                 }
                 else
                 {
-                    Debug.Log("I'm looking at nothing");
                     
                 }
             break;

@@ -93,6 +93,7 @@ public class MouseInputBuild : MonoBehaviour
                         m_posDown += divisionsVec;
                         GameObject.Instantiate(m_point, m_posDown, m_startObj.transform.rotation, m_wall.transform);
                     }
+
                     m_mousedown = false;
                 }
                 break;
