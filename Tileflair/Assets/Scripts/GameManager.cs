@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    Paintmanager m_paintManager;
+    WallVisibilityManager m_wallVisibility;
+
     public enum State
     {
         BUILD,
@@ -18,7 +21,8 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        m_paintManager = GameObject.Find("PaintManager").GetComponent<Paintmanager>();
+        m_wallVisibility = GameObject.Find("WallVisibilityManager").GetComponent<WallVisibilityManager>();
     }
 
     // Update is called once per frame
@@ -28,6 +32,14 @@ public class GameManager : MonoBehaviour
 
     public void SwitchStates(State _state)
     {
+        if (m_gameState == State.PAINT)
+        {
+            m_paintManager.End();
+        }
+        if (m_gameState == State.VIEW)
+        {
+            m_wallVisibility.End();
+        }
         m_previousState = m_gameState;
         m_gameState = _state;
     }

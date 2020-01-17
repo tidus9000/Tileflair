@@ -55,4 +55,17 @@ public class WallVisibilityManager : MonoBehaviour
             break;
         }
     }
+
+    public void End()
+    {
+        if (m_selected)
+        {
+            var parent = m_selected.transform.parent;
+
+            foreach (Renderer r in parent.GetComponentsInChildren<Renderer>())
+            {
+                r.material = m_defaultMat;
+            }
+        }
+    }
 }
