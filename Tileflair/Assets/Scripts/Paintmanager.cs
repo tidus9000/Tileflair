@@ -176,6 +176,15 @@ public class Paintmanager : MonoBehaviour
     }
 
     /// <summary>
+    /// Returns the selected Wall
+    /// </summary>
+    /// <returns></returns>
+    public GameObject GetActiveWall()
+    {
+        return walls[m_activeWall].gameObject;
+    }
+
+    /// <summary>
     /// Returns the rotation of a wall block
     /// </summary>
     /// <returns></returns>
