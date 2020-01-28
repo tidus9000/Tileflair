@@ -48,23 +48,28 @@ public class WallPainter : MonoBehaviour
                 }
                 if (Input.GetMouseButtonUp(0))
                 {
+                    Destroy(m_testTile.gameObject);
                     m_posUp = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 10));
-
+                    GameObject tiles = new GameObject();
+                    Instantiate(tiles, Vector3.zero, Quaternion.identity);
+                    tiles.name = "Tiles";
+                    tiles.transform.parent = m_paintmanager.GetActiveWall().transform;
                     //for some reason the increment has to be multiplied by 10. I don't know why but hey it works
                     for (float x = m_posDown.x; x < m_posUp.x; x += 0.2f )
                     {
                         for (float y = m_posDown.y; y < m_posUp.y; y += 0.1f)
                         {
-                            float wall_zPos = m_paintmanager.GetActiveWall().transform.position.z;
-                            m_testTile = GameObject.Instantiate(m_tileObj, new Vector3(x, y, wall_zPos - 0.1f), Quaternion.identity);
+                            m_testTile = GameObject.Instantiate(m_tileObj, new Vector3(x, y, 0), Quaternion.identity);
                             //Change the texture to our active tile
                             m_testTile.GetComponentInChildren<Renderer>().material.mainTexture = m_activeTile;
                             //Scale it down to the correct measurements
                             m_testTile.GetComponentInChildren<Transform>().localScale = (new Vector3(0.02f, 0.01f, 1.0f));
-                            m_testTile.transform.parent = m_paintmanager.GetActiveWall().transform;
+                            m_testTile.transform.parent = tiles.transform;
                         }
                     }
-
+                    Vector3 newpos = tiles.transform.localPosition;
+                    newpos.z = -0.551f;
+                    tiles.transform.localPosition = newpos;
                     m_mousedown = false;
                 }
                 break;

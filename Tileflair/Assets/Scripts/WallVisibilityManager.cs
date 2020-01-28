@@ -28,7 +28,10 @@ public class WallVisibilityManager : MonoBehaviour
 
                     foreach (Renderer r in parent.GetComponentsInChildren<Renderer>())
                     {
-                        r.material = m_defaultMat;
+                        if (r.CompareTag("Wall"))
+                        {
+                            r.material = m_defaultMat;
+                        }
                     }
                     m_selected = null;
                 }
@@ -37,16 +40,22 @@ public class WallVisibilityManager : MonoBehaviour
                 RaycastHit hit;
                 if (Physics.Raycast(ray, out hit))
                 {
-                    Transform selectedObj = hit.transform;
-                    if (selectedObj.CompareTag("Wall"))
+                    if (hit.transform.CompareTag("Wall"))
                     {
-                        var parent = selectedObj.transform.parent;
-                        foreach (Renderer r in parent.GetComponentsInChildren<Renderer>())
+                        Transform selectedObj = hit.transform;
+                        if (selectedObj.CompareTag("Wall"))
                         {
-                            r.material = m_transparentMat;
+                            var parent = selectedObj.transform.parent;
+                            foreach (Renderer r in parent.GetComponentsInChildren<Renderer>())
+                            {
+                                if (r.CompareTag("Wall"))
+                                {
+                                    r.material = m_transparentMat;
+                                }
+                            }
                         }
+                        m_selected = selectedObj.gameObject;
                     }
-                    m_selected = selectedObj.gameObject;
                 }
                 else
                 {

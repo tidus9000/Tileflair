@@ -169,9 +169,12 @@ public class Paintmanager : MonoBehaviour
         Vector3 midpoint = GetMidpointOfActiveWall();
         foreach (Transform child in walls[m_activeWall])
         {
-            Quaternion rotation = child.rotation;
-            float angle = rotation.eulerAngles.y + (_angle * -1);
-            child.RotateAround(midpoint, Vector3.up, -angle);
+            if (child.CompareTag("Wall"))
+            {
+                Quaternion rotation = child.rotation;
+                float angle = rotation.eulerAngles.y + (_angle * -1);
+                child.RotateAround(midpoint, Vector3.up, -angle);
+            }
         }
     }
 
