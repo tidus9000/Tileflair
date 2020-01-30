@@ -39,10 +39,13 @@ public class Paintmanager : MonoBehaviour
                 walls.RemoveAt((walls.Count) - 1);
                 m_activeWall = 0;
                 m_originalWallLocation = walls[m_activeWall].position;
-                m_originalWallRotation = GetWallChildRotation();
+                m_originalWallRotation = walls[m_activeWall].rotation;
                 //move the wall to the location of the camera
                 walls[m_activeWall].position = m_activeWallLocation.position;
-                RotateActiveWallToMinus90();
+                Vector3 newrot = walls[m_activeWall].rotation.eulerAngles;
+                newrot.y = -90;
+                walls[m_activeWall].rotation = Quaternion.Euler(newrot);
+                //RotateActiveWallToMinus90();
                 //rotate the camera around the wall
                 //-90
                 //get the walls rotation
@@ -67,17 +70,20 @@ public class Paintmanager : MonoBehaviour
         {
             //move the old active wall back to the room
             walls[m_activeWall].position = m_originalWallLocation;
-            //walls[m_activeWall].rotation = m_originalWallRotation;
-            RotateActiveWallToAngle(m_originalWallRotation.eulerAngles.y);
+            walls[m_activeWall].rotation = m_originalWallRotation;
+            //RotateActiveWallToAngle(m_originalWallRotation.eulerAngles.y);
 
 
             //store the new walls original location
             m_activeWall = _index;
             m_originalWallLocation = walls[m_activeWall].position;
-            m_originalWallRotation = GetWallChildRotation();
+            m_originalWallRotation = walls[m_activeWall].rotation;
             //move the new active wall to the camera
             walls[m_activeWall].position = m_activeWallLocation.position;
-            RotateActiveWallToMinus90();
+            Vector3 newrot = walls[m_activeWall].rotation.eulerAngles;
+            newrot.y = -90;
+            walls[m_activeWall].rotation = Quaternion.Euler(newrot);
+            //RotateActiveWallToMinus90();
             /*Vector3 midpoint = GetMidpointOfActiveWall();
             foreach (Transform child in walls[m_activeWall])
             {
@@ -126,8 +132,8 @@ public class Paintmanager : MonoBehaviour
     {
         m_buttons.SetActive(false);
         walls[m_activeWall].position = m_originalWallLocation;
-        //walls[m_activeWall].rotation = m_originalWallRotation;
-        RotateActiveWallToAngle(m_originalWallRotation.eulerAngles.y);
+        walls[m_activeWall].rotation = m_originalWallRotation;
+        //RotateActiveWallToAngle(m_originalWallRotation.eulerAngles.y);
         walls.Clear();
     }
 
@@ -135,48 +141,50 @@ public class Paintmanager : MonoBehaviour
     /// returns the midpoint of the active wall
     /// </summary>
     /// <returns></returns>
-    Vector3 GetMidpointOfActiveWall()
-    {
-        Vector3 midPoint = Vector3.zero;
-        int count = 0;
+    //Vector3 GetMidpointOfActiveWall()
+    //{
+    //    Vector3 midPoint = Vector3.zero;
+    //    int count = 0;
 
-        foreach(Transform child in walls[m_activeWall])
-        {
-            midPoint += child.position;
-            count++;
-        }
+    //    foreach(Transform child in walls[m_activeWall])
+    //    {
+    //        midPoint += child.position;
+    //        count++;
+    //    }
 
-        midPoint /= count;
-        return midPoint;
-    }
+    //    midPoint /= count;
+    //    return midPoint;
+    //}
 
-    [ContextMenu("Rotate")]
-    public void RotateActiveWallToMinus90()
-    {
-        //I want the angle to be -90
-        Vector3 midpoint = GetMidpointOfActiveWall();
-        foreach (Transform child in walls[m_activeWall])
-        {
-            float angle = child.localRotation.y + 90;
-            Quaternion rotation = child.rotation;
-            angle = rotation.eulerAngles.y + 90;
-            child.RotateAround(midpoint, Vector3.up, -angle);
-        }
-    }
+    //[ContextMenu("Rotate")]
+    //public void RotateActiveWallToMinus90()
+    //{
+    //    //I want the angle to be -90
+    //    Vector3 midpoint = GetMidpointOfActiveWall();
 
-    void RotateActiveWallToAngle(float _angle)
-    {
-        Vector3 midpoint = GetMidpointOfActiveWall();
-        foreach (Transform child in walls[m_activeWall])
-        {
-            if (child.CompareTag("Wall"))
-            {
-                Quaternion rotation = child.rotation;
-                float angle = rotation.eulerAngles.y + (_angle * -1);
-                child.RotateAround(midpoint, Vector3.up, -angle);
-            }
-        }
-    }
+
+    //    foreach (Transform child in walls[m_activeWall])
+    //    {
+    //        float angle = child.localRotation.y + 90;
+    //        Quaternion rotation = child.rotation;
+    //        angle = rotation.eulerAngles.y + 90;
+    //        child.RotateAround(midpoint, Vector3.up, -angle);
+    //    }
+    //}
+
+    //void RotateActiveWallToAngle(float _angle)
+    //{
+    //    Vector3 midpoint = GetMidpointOfActiveWall();
+    //    foreach (Transform child in walls[m_activeWall])
+    //    {
+    //        if (child.CompareTag("Wall"))
+    //        {
+    //            Quaternion rotation = child.rotation;
+    //            float angle = rotation.eulerAngles.y + (_angle * -1);
+    //            child.RotateAround(midpoint, Vector3.up, -angle);
+    //        }
+    //    }
+    //}
 
     /// <summary>
     /// Returns the selected Wall
@@ -191,8 +199,8 @@ public class Paintmanager : MonoBehaviour
     /// Returns the rotation of a wall block
     /// </summary>
     /// <returns></returns>
-    Quaternion GetWallChildRotation()
-    {
-        return walls[m_activeWall].GetChild(0).transform.rotation;
-    }
+    //Quaternion GetWallChildRotation()
+    //{
+    //    return walls[m_activeWall].GetChild(0).transform.rotation;
+    //}
 }

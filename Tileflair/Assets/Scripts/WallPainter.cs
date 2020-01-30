@@ -68,7 +68,7 @@ public class WallPainter : MonoBehaviour
                         }
                     }
                     Vector3 newpos = tiles.transform.localPosition;
-                    newpos.z = -0.551f;
+                    newpos.x = -0.551f;
                     tiles.transform.localPosition = newpos;
                     m_mousedown = false;
                 }

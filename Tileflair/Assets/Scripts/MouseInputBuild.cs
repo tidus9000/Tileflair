@@ -10,7 +10,6 @@ public class MouseInputBuild : MonoBehaviour
     GameManager m_manager;
     GameObject m_startObj;
     GameObject m_room;
-    GameObject m_wall;
     Vector3 m_posDown;
     Vector3 m_posUp;
     GridManager m_grid;
@@ -63,9 +62,7 @@ public class MouseInputBuild : MonoBehaviour
                     //Spawn an initial wall object on the grid where the user has clicked
                     m_posDown = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 10));
                     m_posDown = m_grid.FindClosestPoint(m_posDown);
-                    m_wall = new GameObject("Wall");
-                    m_wall.transform.parent = m_room.transform;
-                    m_startObj = GameObject.Instantiate(m_point, m_posDown, Quaternion.identity, m_wall.transform);
+                    m_startObj = GameObject.Instantiate(m_point, m_posDown, Quaternion.identity, m_room.transform);
                     m_mousedown = true;
                 }
                 if (m_mousedown)
@@ -73,26 +70,38 @@ public class MouseInputBuild : MonoBehaviour
                     //rotate the initial object to where the mouse is pointing
                     if (m_startObj)
                     {
-                        m_startObj.transform.LookAt(m_grid.FindClosestPoint(Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 10))));
+                        Vector3 closestPoint = m_grid.FindClosestPoint(Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 10)));
+                        m_startObj.transform.LookAt(closestPoint);
+                        if (closestPoint != m_posDown)
+                        {
+                            float scale = Vector3.Distance(closestPoint, m_posDown);
+                            Vector3 newscale = m_startObj.transform.localScale;
+                            newscale.z = scale;
+                            m_startObj.transform.localScale = newscale;
+                            m_startObj.transform.position = (closestPoint + m_posDown) / 2;
+                        }
                     }
                 }
                 if (Input.GetMouseButtonUp(0))
                 {
-                    //Calculate how many wall objects need to be made and Spawn them up to the point where the user has let go
-                    m_posUp = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 10));
-                    m_posUp = m_grid.FindClosestPoint(m_posUp);
+                    ///*****
+                    ///This was an old method I used for making the walls. It was bad but I'm keeping it here for the purposes of documentation
+                    ///*****
+                    ////Calculate how many wall objects need to be made and Spawn them up to the point where the user has let go
+                    //m_posUp = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 10));
+                    //m_posUp = m_grid.FindClosestPoint(m_posUp);
 
 
-                    float distance = Vector3.Distance(m_posDown, m_posUp);
-                    int noObjects = (int)(distance / m_point.transform.localScale.x);
-                    Vector3 divisionsVec = m_posUp - m_posDown;
-                    divisionsVec /= noObjects;
+                    //float distance = Vector3.Distance(m_posDown, m_posUp);
+                    //int noObjects = (int)(distance / m_point.transform.localScale.x);
+                    //Vector3 divisionsVec = m_posUp - m_posDown;
+                    //divisionsVec /= noObjects;
 
-                    for (int i = 0; i < noObjects; i++)
-                    {
-                        m_posDown += divisionsVec;
-                        GameObject.Instantiate(m_point, m_posDown, m_startObj.transform.rotation, m_wall.transform);
-                    }
+                    //for (int i = 0; i < noObjects; i++)
+                    //{
+                    //    m_posDown += divisionsVec;
+                    //    GameObject.Instantiate(m_point, m_posDown, m_startObj.transform.rotation, m_wall.transform);
+                    //}
 
                     m_mousedown = false;
                 }
@@ -100,19 +109,19 @@ public class MouseInputBuild : MonoBehaviour
             case GameManager.State.PAINT:
                 if (m_manager.GetPreviousState() == GameManager.State.BUILD)
                 {
-                    Destroy(m_wall);
+                    Destroy(m_startObj);
                 }
                 break;
             case GameManager.State.PLACE:
                 if (m_manager.GetPreviousState() == GameManager.State.BUILD)
                 {
-                    Destroy(m_wall);
+                    Destroy(m_startObj);
                 }
                 break;
             case GameManager.State.VIEW:
                 if (m_manager.GetPreviousState() == GameManager.State.BUILD)
                 {
-                    Destroy(m_wall);
+                    Destroy(m_startObj);
                     target = m_room.transform;
                 }
                 //What i want:
