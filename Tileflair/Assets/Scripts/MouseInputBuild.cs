@@ -168,4 +168,41 @@ public class MouseInputBuild : MonoBehaviour
             angle -= 360F;
         return Mathf.Clamp(angle, min, max);
     }
+
+    /// <summary>
+    /// Gets the world position of all the lowest vertices of the walls to generate the floor;
+    /// </summary>
+    /// <returns></returns>
+    public Vector3[] GetRoomFloorVerts()
+    {
+        List<Vector3> Verts = new List<Vector3>();
+
+        //Go through each wall and find the lowest vertices on the y axis
+        foreach(Transform child in m_room.transform)
+        {
+
+            Mesh m_mesh = child.GetComponent<MeshFilter>().mesh;
+            Vector3[] vertices = m_mesh.vertices;
+
+            //find the lowest y value
+            float lowestY = float.MaxValue;
+            foreach(Vector3 v in vertices)
+            {
+                if (v.y < lowestY)
+                {
+                    lowestY = v.y;
+                }
+            }
+            //Then loop again to find all the values that match that and add them to the vert list
+            foreach (Vector3 v in vertices)
+            {
+                if (v.y == lowestY)
+                {
+                    Verts.Add(child.TransformPoint(v));
+                }
+            }
+        }
+
+        return Verts.ToArray();
+    }
 }
