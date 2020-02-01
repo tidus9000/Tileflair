@@ -15,6 +15,10 @@ public class MouseInputBuild : MonoBehaviour
     GridManager m_grid;
     bool m_mousedown = false;
 
+    //Floor
+    GameObject m_floor;
+    Vector3 defaultFloorPos;
+
     //View State Variables
     public Transform target;
     public float distance = 2.0f;
@@ -39,6 +43,10 @@ public class MouseInputBuild : MonoBehaviour
         m_grid = GameObject.Find("GridManager").GetComponent<GridManager>();
         m_manager = GameObject.Find("GameManager").GetComponent<GameManager>();
         m_room = new GameObject("Room");
+
+        //Setup for the floor in view mode
+        m_floor = GameObject.Find("Floor");
+        defaultFloorPos = m_floor.transform.position;
 
         //Setup for View State
         Vector3 angles = transform.eulerAngles;
@@ -122,7 +130,13 @@ public class MouseInputBuild : MonoBehaviour
                 if (m_manager.GetPreviousState() == GameManager.State.BUILD)
                 {
                     Destroy(m_startObj);
+                }
+                if (m_manager.GetPreviousState() != GameManager.State.VIEW)
+                {
                     target = m_room.transform;
+                    Vector3 newpos = Vector3.zero;
+                    newpos.y = -1.4f;
+                    m_floor.transform.position = newpos;
                 }
                 //What i want:
                 //When a user clicks, holds and drags, they should be able to rotate the room model.
@@ -203,6 +217,21 @@ public class MouseInputBuild : MonoBehaviour
             }
         }
 
+        //check for duplicate points
+        for (int i = 0; i < Verts.Count; i++)
+        {
+            for (int j = 0; j < Verts.Count; j++)
+            {
+                if (i != j)
+                {
+                    if (Verts[i] == Verts[j])
+                    {
+                        Verts.RemoveAt(j);
+                        j--;
+                    }
+                }
+            }
+        }
         return Verts.ToArray();
     }
 }

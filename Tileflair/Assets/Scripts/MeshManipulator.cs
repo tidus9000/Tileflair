@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class MeshManipulator : MonoBehaviour
 {
@@ -25,21 +26,21 @@ void Start()
     void Update()
     {
         //Vertices[0].y += 1 * Time.deltaTime;
-        for (int i = 0; i < WorldVertices.Length; i++)
-        {
-            WorldVertices[i] = transform.TransformPoint(Vertices[i]);
-        }
+        //for (int i = 0; i < WorldVertices.Length; i++)
+        //{
+        //    WorldVertices[i] = transform.TransformPoint(Vertices[i]);
+        //}
 
-        if (m_add)
-        {
-            WorldVertices[0].y += 1;
-            m_add = false;
-        }
+        //if (m_add)
+        //{
+        //    WorldVertices[0].y += 1;
+        //    m_add = false;
+        //}
 
-        for (int i = 0; i < Vertices.Length; ++i)
-        {
-            Vertices[i] = transform.InverseTransformPoint(WorldVertices[i]);
-        }
+        //for (int i = 0; i < Vertices.Length; ++i)
+        //{
+        //    Vertices[i] = transform.InverseTransformPoint(WorldVertices[i]);
+        //}
 
         mesh.vertices = Vertices;
         //mesh.RecalculateBounds();
@@ -48,22 +49,44 @@ void Start()
     [ContextMenu("Generate Floor")]
     public void Add1()
     {
-        transform.position = Vector3.zero;
+        Mesh newMesh = new Mesh();
         m_floorWorldVerts = m_buildManager.GetRoomFloorVerts();
+        Vector3[] floorLocalVerts = new Vector3[m_floorWorldVerts.Length];
+        Vector3 newPos = Vector3.zero;
+        newPos.y = m_floorWorldVerts[0].y;
+        transform.position = newPos;
 
-        for (int i = 0; i < m_floorWorldVerts.Length; i++)
-        {
-            Vertices[i] = transform.InverseTransformPoint(m_floorWorldVerts[i]);
-        }
+        NavMeshSurface nms = GetComponent<NavMeshSurface>();
+        nms.BuildNavMesh();
 
-        int[] newTriangles = new int[(m_floorWorldVerts.Length * 3) - 102];
-        int[] triangles = mesh.triangles;
-        for (int i = 0; i < newTriangles.Length; i++)
-        {
-            newTriangles[i] = triangles[i];
-        }
+        //for (int i = 0; i < m_floorWorldVerts.Length; i++)
+        //{
+        //    Vertices[i] = transform.InverseTransformPoint(m_floorWorldVerts[i]);
+        //    floorLocalVerts[i] = transform.InverseTransformPoint(m_floorWorldVerts[i]);
+        //}
 
-        mesh.triangles = newTriangles;
+        //int[] newTriangles = new int[(m_floorWorldVerts.Length * 3)];
+        //List<int> newTriangles = new List<int>();
+        //int[] triangles = mesh.triangles;
+        //int j = 0;
+        //for (int i = 0; j < (m_floorWorldVerts.Length * 3); i++)
+        //{
+        //    if (triangles[i] < m_floorWorldVerts.Length)
+        //    {
+        //        newTriangles.Add(triangles[i]);
+        //        j++;
+        //    }
+        //}
+
+        //mesh.vertices = floorLocalVerts;
+        //mesh.triangles = newTriangles.ToArray();
+
+        //newMesh.vertices = floorLocalVerts;
+        //newMesh.triangles = newTriangles.ToArray();
+        //mesh = newMesh;
+        //mesh.RecalculateBounds();
+        //mesh.RecalculateNormals();
+        //mesh.triangles = newTriangles;
     }
 
     /// <summary>
@@ -80,5 +103,12 @@ void Start()
         return center / Points.Length;
     }
 
-  
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.white;
+        foreach (Vector3 v in m_floorWorldVerts)
+        {
+            Gizmos.DrawIcon(v, "Point", true);
+        }
+    }
 }
