@@ -19,6 +19,12 @@ public class MouseInputBuild : MonoBehaviour
     GameObject m_floor;
     Vector3 defaultFloorPos;
 
+    //Place State Variables
+    [SerializeField] GameObject m_selectedRoomObject;
+    GameObject m_activeObject;
+    bool m_rightMouseheld;
+    public RaycastHit m_hit = new RaycastHit();
+
     //View State Variables
     public Transform target;
     public float distance = 2.0f;
@@ -65,6 +71,11 @@ public class MouseInputBuild : MonoBehaviour
         switch (m_manager.GetState())
         {
             case GameManager.State.BUILD:
+                if (m_manager.GetPreviousState() == GameManager.State.VIEW 
+                    || m_manager.GetPreviousState() == GameManager.State.PLACE)
+                {
+                    m_floor.transform.position = defaultFloorPos;
+                }
                 if (Input.GetMouseButtonDown(0))
                 {
                     //Spawn an initial wall object on the grid where the user has clicked
@@ -119,11 +130,89 @@ public class MouseInputBuild : MonoBehaviour
                 {
                     Destroy(m_startObj);
                 }
+                if (m_manager.GetPreviousState() == GameManager.State.VIEW
+                    || m_manager.GetPreviousState() == GameManager.State.PLACE)
+                {
+                    m_floor.transform.position = defaultFloorPos;
+                }
                 break;
             case GameManager.State.PLACE:
                 if (m_manager.GetPreviousState() == GameManager.State.BUILD)
                 {
                     Destroy(m_startObj);
+                }
+                if (m_manager.GetPreviousState() != GameManager.State.VIEW)
+                {
+                    target = m_room.transform;
+                    Vector3 newpos = Vector3.zero;
+                    newpos.y = -1.4f;
+                    m_floor.transform.position = newpos;
+                }
+                if (target)
+                {
+
+                    if (Input.GetMouseButton(0))
+                    {
+                        velocityX += (xSpeed * Input.GetAxis("Mouse X") * distance * 0.02f) * Time.deltaTime;
+                        velocityY += (ySpeed * Input.GetAxis("Mouse Y") * 0.02f) * Time.deltaTime;
+                    }
+                    if (Input.GetMouseButtonDown(1))
+                    {
+                        Ray mouseRay = GenerateMouseRay();
+                        //Vector3 newposition = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 10));
+                        //newposition.y = m_floor.transform.position.y;
+                        //m_activeObject = GameObject.Instantiate(m_selectedRoomObject, newposition, Quaternion.identity);
+                        if (Physics.Raycast(mouseRay.origin, mouseRay.direction, out m_hit))
+                        {
+                            GameObject hitObj = m_hit.transform.gameObject;
+                            Plane objPlane = new Plane(Vector3.up, hitObj.transform.position);
+                            //Calculate offset
+                            Ray mRay = Camera.main.ScreenPointToRay(Input.mousePosition);
+                            float rayDistance;
+                            objPlane.Raycast(mRay, out rayDistance);
+                            m_activeObject = GameObject.Instantiate(m_selectedRoomObject,
+                                (mRay.GetPoint(rayDistance) - hitObj.transform.position), Quaternion.identity);
+                            m_rightMouseheld = true;
+                        }
+                        else
+                        {
+                            Debug.Log("Not hitting anything");
+                        }
+                    }
+                    if (Input.GetMouseButtonUp(1))
+                    {
+                        m_rightMouseheld = false;
+                    }
+                    if (m_rightMouseheld)
+                    {
+                        GameObject hitObj = m_hit.transform.gameObject;
+                        Plane objPlane = new Plane(Vector3.up, hitObj.transform.position);
+                        //Calculate offset
+                        Ray mRay = Camera.main.ScreenPointToRay(Input.mousePosition);
+                        float rayDistance;
+                        objPlane.Raycast(mRay, out rayDistance);
+                        m_activeObject.transform.position = mRay.GetPoint(rayDistance) - hitObj.transform.position;
+                    }
+                    rotationYAxis += velocityX;
+                    rotationXAxis -= velocityY;
+                    rotationXAxis = ClampAngle(rotationXAxis, yMinLimit, yMaxLimit);
+                    Quaternion fromRotation = Quaternion.Euler(transform.rotation.eulerAngles.x, transform.rotation.eulerAngles.y, 0);
+                    Quaternion toRotation = Quaternion.Euler(rotationXAxis, rotationYAxis, 0);
+                    Quaternion rotation = toRotation;
+
+                    distance = Mathf.Clamp(distance - Input.GetAxis("Mouse ScrollWheel") * 5, distanceMin, distanceMax);
+                    RaycastHit hit;
+                    if (Physics.Linecast(target.position, transform.position, out hit))
+                    {
+                        distance -= hit.distance;
+                    }
+                    Vector3 negDistance = new Vector3(0.0f, 0.0f, -distance);
+                    Vector3 position = rotation * negDistance + target.position;
+
+                    Camera.main.transform.rotation = rotation;
+                    Camera.main.transform.position = position;
+                    velocityX = Mathf.Lerp(velocityX, 0, Time.deltaTime * smoothTime);
+                    velocityY = Mathf.Lerp(velocityY, 0, Time.deltaTime * smoothTime);
                 }
                 break;
             case GameManager.State.VIEW:
@@ -233,5 +322,20 @@ public class MouseInputBuild : MonoBehaviour
             }
         }
         return Verts.ToArray();
+    }
+
+    Ray GenerateMouseRay()
+    {
+        Vector3 mousePosFar = new Vector3(Input.mousePosition.x,
+                                            Input.mousePosition.y,
+                                            Camera.main.farClipPlane);
+        Vector3 mousePosNear = new Vector3(Input.mousePosition.x,
+                                            Input.mousePosition.y,
+                                            Camera.main.nearClipPlane);
+        Vector3 mousePosF = Camera.main.ScreenToWorldPoint(mousePosFar);
+        Vector3 mousePosN = Camera.main.ScreenToWorldPoint(mousePosNear);
+
+        Ray mr = new Ray(mousePosN, mousePosF - mousePosN);
+        return mr;
     }
 }

@@ -580,7 +580,7 @@ MonoBehaviour:
   m_orthCam: {fileID: 1734013394}
   m_persCam: {fileID: 960392744}
   m_paintCam: {fileID: 1899076111}
-  m_placeCam: {fileID: 0}
+  m_placeCam: {fileID: 960392744}
 --- !u!20 &519420031
 Camera:
   m_ObjectHideFlags: 0
@@ -938,7 +938,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 519420030}
-        m_MethodName: SwitchToPerspective
+        m_MethodName: SwitchToPlaceMode
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1717,6 +1717,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_point: {fileID: 797291570530447268, guid: 20a053d6885692f43b7a7e2433289d0f, type: 3}
+  m_selectedRoomObject: {fileID: 8859316492123522611, guid: af60d6bc6863b24418b356dcc146a641,
+    type: 3}
   target: {fileID: 0}
   distance: 2
   xSpeed: 40

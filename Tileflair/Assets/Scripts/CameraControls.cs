@@ -28,6 +28,15 @@ public class CameraControls : MonoBehaviour
         
     }
 
+    public void SwitchToPlaceMode()
+    {
+        m_mainCam.orthographic = false;
+        m_mainCam.transform.position = m_persCam.transform.position;
+        m_mainCam.transform.rotation = m_persCam.transform.rotation;
+        m_gridmanager.SetActive(false);
+        m_gameManager.SwitchStates(GameManager.State.PLACE);
+    }
+
     public void SwitchToPerspective()
     {
         m_mainCam.orthographic = false;

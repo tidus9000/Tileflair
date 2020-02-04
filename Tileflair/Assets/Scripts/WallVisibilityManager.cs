@@ -21,7 +21,7 @@ public class WallVisibilityManager : MonoBehaviour
         switch (m_manager.GetState())
         {
             case GameManager.State.VIEW:
-
+            case GameManager.State.PLACE:
                 if (m_selected)
                 {
                     m_selected.GetComponent<Renderer>().material = m_defaultMat;
