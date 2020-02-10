@@ -801,6 +801,7 @@ GameObject:
   - component: {fileID: 620864411}
   - component: {fileID: 620864410}
   - component: {fileID: 620864412}
+  - component: {fileID: 620864413}
   m_Layer: 0
   m_Name: PaintManager
   m_TagString: Untagged
@@ -855,6 +856,18 @@ MonoBehaviour:
   m_activeTile: {fileID: 2800000, guid: cf5c28a03edf5b04aa0058d9641df2ae, type: 3}
   m_tileObj: {fileID: 7423582539581045023, guid: fdcdbb386b56ee64e94cc95c4f9ab387,
     type: 3}
+--- !u!114 &620864413
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 620864409}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db0f6f88e047caf49aeab368dfee73c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &657800744
 GameObject:
   m_ObjectHideFlags: 0

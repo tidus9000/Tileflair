@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class WallPainter : MonoBehaviour
 {
-    [SerializeField] Texture2D m_activeTile;
     [SerializeField] GameObject m_tileObj;
     Vector3 m_posDown;
     Vector3 m_posUp;
@@ -12,6 +11,9 @@ public class WallPainter : MonoBehaviour
     GameManager m_gameManager;
     Paintmanager m_paintmanager;
     bool m_mousedown = false;
+
+    List<TileData> m_tiles;
+    TileData m_activeTile;
 
     // Start is called before the first frame update
     void Start()
@@ -34,7 +36,7 @@ public class WallPainter : MonoBehaviour
                     m_posDown = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 4));
                     m_testTile = GameObject.Instantiate(m_tileObj, m_posDown, Quaternion.identity);
                     //Change the texture to our active tile
-                    m_testTile.GetComponentInChildren<Renderer>().material.mainTexture = m_activeTile;
+                    m_testTile.GetComponentInChildren<Renderer>().material.mainTexture = m_activeTile.m_texture;
                     //Scale it down to the correct measurements
                     //here we will read from a json file that
                     m_testTile.GetComponentInChildren<Transform>().localScale = (new Vector3(0.02f, 0.01f, 1.0f));
@@ -55,15 +57,16 @@ public class WallPainter : MonoBehaviour
                     tiles.name = "Tiles";
                     tiles.transform.parent = m_paintmanager.GetActiveWall().transform;
                     //for some reason the increment has to be multiplied by 10. I don't know why but hey it works
-                    for (float x = m_posDown.x; x < m_posUp.x; x += 0.2f )
+                    for (float x = m_posDown.x; x < m_posUp.x; x += m_activeTile.m_width / 1000)
                     {
-                        for (float y = m_posDown.y; y < m_posUp.y; y += 0.1f)
+                        for (float y = m_posDown.y; y < m_posUp.y; y += m_activeTile.m_height / 1000)
                         {
                             m_testTile = GameObject.Instantiate(m_tileObj, new Vector3(x, y, 0), Quaternion.identity);
                             //Change the texture to our active tile
-                            m_testTile.GetComponentInChildren<Renderer>().material.mainTexture = m_activeTile;
+                            m_testTile.GetComponentInChildren<Renderer>().material.mainTexture = m_activeTile.m_texture;
                             //Scale it down to the correct measurements
-                            m_testTile.GetComponentInChildren<Transform>().localScale = (new Vector3(0.02f, 0.01f, 1.0f));
+                            m_testTile.GetComponentInChildren<Transform>().localScale = 
+                                (new Vector3(m_activeTile.m_width / 10000, m_activeTile.m_height / 10000, 1.0f));
                             m_testTile.transform.parent = tiles.transform;
                         }
                     }
@@ -77,6 +80,15 @@ public class WallPainter : MonoBehaviour
                 break;
             case GameManager.State.VIEW:
                 break;
+        }
+    }
+
+    public void SetTileList(List<TileData> _tiles)
+    {
+        m_tiles = _tiles;
+        if (m_tiles.Count > 0)
+        {
+            m_activeTile = m_tiles[0];
         }
     }
 }
