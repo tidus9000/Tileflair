@@ -14,6 +14,8 @@ public class WallPainter : MonoBehaviour
 
     List<TileData> m_tiles;
     TileData m_activeTile;
+    int m_activeTileIndex = 0;
+    [SerializeField] GameObject m_tileButton;
 
     // Start is called before the first frame update
     void Start()
@@ -97,5 +99,16 @@ public class WallPainter : MonoBehaviour
         {
             m_activeTile = m_tiles[0];
         }
+    }
+
+    public List<TileData> GetTileList()
+    {
+        return m_tiles;
+    }
+
+    public void setActiveTile(int _index)
+    {
+        m_activeTileIndex = _index;
+        m_activeTile = m_tiles[m_activeTileIndex];
     }
 }
