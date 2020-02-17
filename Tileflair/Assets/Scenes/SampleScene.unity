@@ -557,7 +557,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &275583766
 RectTransform:
   m_ObjectHideFlags: 0
@@ -946,7 +946,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_tileObj: {fileID: 7423582539581045023, guid: fdcdbb386b56ee64e94cc95c4f9ab387,
     type: 3}
-  m_tileButton: {fileID: 0}
+  m_tileButton: {fileID: 76088066584315638, guid: b7d18719ff2713b42859e47f7bbdf0b2,
+    type: 3}
 --- !u!114 &620864413
 MonoBehaviour:
   m_ObjectHideFlags: 0
