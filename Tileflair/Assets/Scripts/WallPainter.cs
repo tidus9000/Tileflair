@@ -50,7 +50,6 @@ public class WallPainter : MonoBehaviour
                 }
                 if (Input.GetMouseButtonDown(1))
                 {
-                    Debug.Log("Right Click");
                     if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), 100f))
                     {
                         //Spawn an initial tile object
@@ -63,6 +62,7 @@ public class WallPainter : MonoBehaviour
                         Texture normalTex = NormalMapTools.CreateNormalmap(filteredTex, 6);
 
                         Renderer r = m_testTile.GetComponentInChildren<Renderer>();
+                        r.material.EnableKeyword("_NORMALMAP");
                         //Change the texture to our active tile
                         r.material.mainTexture = m_activeTile.m_texture;
                         //Set the normal map
@@ -117,7 +117,6 @@ public class WallPainter : MonoBehaviour
 
                 if (Input.GetMouseButtonUp(1))
                 {
-                    Debug.Log("Right Click Up");
                     if (m_testTile && Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), 100f))
                     {
                         GameObject temptile = m_testTile.gameObject;
