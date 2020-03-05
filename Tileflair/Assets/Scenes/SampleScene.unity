@@ -893,6 +893,7 @@ GameObject:
   - component: {fileID: 620864410}
   - component: {fileID: 620864412}
   - component: {fileID: 620864413}
+  - component: {fileID: 620864414}
   m_Layer: 0
   m_Name: PaintManager
   m_TagString: Untagged
@@ -955,11 +956,36 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 620864409}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: db0f6f88e047caf49aeab368dfee73c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &620864414
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 620864409}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 249c3522b4191a3458a5d75c0fa6f44f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_tilenames:
+  - PVT Bevelled Cream Wall
+  - Edge Piombo (Charcoal)
+  - Edge Anice (Ice Blue)
+  m_tileURLs:
+  - https://www.tileflair.co.uk/products/200x100-shades-tsp31-pvt-bevelled-cream
+  - https://www.tileflair.co.uk/products/edge-piombo-charcoal
+  - https://www.tileflair.co.uk/products/edge-anice-ice-blue
+  m_tileTextures:
+  - {fileID: 2800000, guid: 7d4c6be52fc86f546bf7f1dc61fc4f2e, type: 3}
+  - {fileID: 2800000, guid: 02c9fb733ff1508459247456dcac266e, type: 3}
+  - {fileID: 2800000, guid: f92431d5a3541fa459f8ee104fc7eab3, type: 3}
+  m_tiles: []
 --- !u!1 &657800744
 GameObject:
   m_ObjectHideFlags: 0
