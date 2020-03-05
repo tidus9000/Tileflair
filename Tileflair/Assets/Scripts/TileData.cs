@@ -10,7 +10,18 @@ public class TileData : MonoBehaviour
     public float m_height;
     public float m_width;
     public string m_finish;
+    public float m_pricePerTile;
     public Texture2D m_texture;
+
+    public TileData(string _name, float _height, float _width, string _finish, float _pricePerTile, Texture2D _texture)
+    {
+        m_name = _name;
+        m_height = _height;
+        m_width = _width;
+        m_finish = _finish;
+        m_pricePerTile = _pricePerTile;
+        m_texture = _texture;
+    }
 
     public TileData(string[] data)
     {
