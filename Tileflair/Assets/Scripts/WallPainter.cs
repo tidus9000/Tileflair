@@ -104,6 +104,7 @@ public class WallPainter : MonoBehaviour
                                     m_testTile.GetComponentInChildren<Transform>().localScale =
                                         (new Vector3(m_activeTile.m_width / 10000, m_activeTile.m_height / 10000, 1.0f));
                                     m_testTile.transform.parent = tiles.transform;
+                                    m_gameManager.m_price += m_activeTile.m_pricePerTile;
                                 }
                             }
                             Vector3 newpos = tiles.transform.localPosition;
@@ -208,6 +209,7 @@ public class WallPainter : MonoBehaviour
                                 m_testTile.GetComponentInChildren<Transform>().localScale =
                                     (new Vector3(m_activeTile.m_width / 10000, m_activeTile.m_height / 10000, 1.0f));
                                 m_testTile.transform.parent = tiles.transform;
+                                m_gameManager.m_price += m_activeTile.m_pricePerTile;
                             }
                         }
                         Vector3 newpos = tiles.transform.localPosition;

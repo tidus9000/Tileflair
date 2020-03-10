@@ -5,7 +5,8 @@ using UnityEngine;
 
 public class TileButton : MonoBehaviour
 {
-    [SerializeField]int m_index;
+    [SerializeField]int m_index = 0;
+    [SerializeField] string m_name;
     WallPainter m_wallPainter;
 
     // Start is called before the first frame update
@@ -17,7 +18,7 @@ public class TileButton : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     public void setup(TileData _tile, int _index)
@@ -27,6 +28,7 @@ public class TileButton : MonoBehaviour
         //Sprite newSprite = Sprite.Create(_tile.m_texture, Rect.zero, Vector2.zero);
         //im.sprite = newSprite;
         GetComponentInChildren<Text>().text = _tile.m_name;
+        m_name = _tile.m_name;
     }
 
     public void setActive()

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.UI;
 
 public class WebPageExtractor : MonoBehaviour
 {
@@ -14,8 +15,15 @@ public class WebPageExtractor : MonoBehaviour
     [SerializeField]List<TileData> m_tiles = new List<TileData>();
     bool completed = true;
 
+    Button m_paintButton;
+    Text m_loadingText;
+
     void Start()
     {
+        m_paintButton = GameObject.Find("Paint Button").GetComponent<Button>();
+        m_paintButton.interactable = false;
+        m_loadingText = GameObject.Find("LoadingTiles").GetComponent<Text>();
+
         if (m_tileURLs.Length == m_tilenames.Length && m_tileURLs.Length == m_tileTextures.Length)
         {
             completed = false;
@@ -36,7 +44,8 @@ public class WebPageExtractor : MonoBehaviour
         {
             GetComponent<WallPainter>().SetTileList(m_tiles);
             completed = true;
-            Debug.Log("Tiles added to tile list");
+            m_paintButton.interactable = true;
+            m_loadingText.text = "Tiles Loaded!";
         }
     }
 

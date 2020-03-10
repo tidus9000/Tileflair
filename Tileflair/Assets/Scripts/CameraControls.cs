@@ -12,6 +12,7 @@ public class CameraControls : MonoBehaviour
     GameObject m_gridmanager;
     GameManager m_gameManager;
     Paintmanager m_paintmanager;
+    GameObject m_tp;
 
     // Start is called before the first frame update
     void Start()
@@ -20,6 +21,8 @@ public class CameraControls : MonoBehaviour
         m_gridmanager = GameObject.Find("GridManager");
         m_gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         m_paintmanager = GameObject.Find("PaintManager").GetComponent<Paintmanager>();
+        m_tp = GameObject.Find("TilesPanel");
+        m_tp.SetActive(false);
     }
 
     // Update is called once per frame
@@ -34,6 +37,7 @@ public class CameraControls : MonoBehaviour
         m_mainCam.transform.position = m_persCam.transform.position;
         m_mainCam.transform.rotation = m_persCam.transform.rotation;
         m_gridmanager.SetActive(false);
+        m_tp.SetActive(false);
         m_gameManager.SwitchStates(GameManager.State.PLACE);
     }
 
@@ -43,6 +47,7 @@ public class CameraControls : MonoBehaviour
         m_mainCam.transform.position = m_persCam.transform.position;
         m_mainCam.transform.rotation = m_persCam.transform.rotation;
         m_gridmanager.SetActive(false);
+        m_tp.SetActive(false);
         m_gameManager.SwitchStates(GameManager.State.VIEW);
     }
 
@@ -52,6 +57,7 @@ public class CameraControls : MonoBehaviour
         m_mainCam.transform.position = m_orthCam.transform.position;
         m_mainCam.transform.rotation = m_orthCam.transform.rotation;
         m_gridmanager.SetActive(true);
+        m_tp.SetActive(false);
         m_gameManager.SwitchStates(GameManager.State.BUILD);
     }
 
@@ -63,6 +69,8 @@ public class CameraControls : MonoBehaviour
         m_mainCam.transform.rotation = m_paintCam.transform.rotation;
         m_paintmanager.Initialise();
         m_gridmanager.SetActive(false);
+        m_tp.SetActive(true);
+        m_tp.GetComponent<TileButtonPanel>().SpawnButtons();
         m_gameManager.SwitchStates(GameManager.State.PAINT);
     }
 }

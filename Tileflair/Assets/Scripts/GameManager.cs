@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -17,10 +18,14 @@ public class GameManager : MonoBehaviour
 
     State m_gameState = State.BUILD;
     State m_previousState;
+    Text m_priceText;
+
+    public float m_price;
 
     // Start is called before the first frame update
     void Start()
     {
+        m_priceText = GameObject.Find("PriceText").GetComponent<Text>();
         m_paintManager = GameObject.Find("PaintManager").GetComponent<Paintmanager>();
         m_wallVisibility = GameObject.Find("WallVisibilityManager").GetComponent<WallVisibilityManager>();
     }
@@ -28,6 +33,7 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        m_priceText.text = "Price: £" + m_price.ToString("F2");
     }
 
     public void SwitchStates(State _state)
