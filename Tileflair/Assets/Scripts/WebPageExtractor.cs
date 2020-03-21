@@ -14,7 +14,7 @@ public class WebPageExtractor : MonoBehaviour
     [SerializeField] Texture2D[] m_tileTextures;
     [SerializeField]List<TileData> m_tiles = new List<TileData>();
     bool completed = true;
-
+    GameObject m_room;
     Button m_paintButton;
     Text m_loadingText;
 
@@ -40,12 +40,21 @@ public class WebPageExtractor : MonoBehaviour
 
     private void Update()
     {
+        if (!m_room)
+        {
+            m_room = GameObject.Find("MouseManager").GetComponent<MouseInputBuild>().GetRoom();
+        }
+
         if (m_tiles.Count == m_tileURLs.Length && !completed)
         {
             GetComponent<WallPainter>().SetTileList(m_tiles);
             completed = true;
-            m_paintButton.interactable = true;
             m_loadingText.text = "Tiles Loaded!";
+        }
+
+        if (completed && m_room.transform.childCount > 0 && m_room)
+        {
+            m_paintButton.interactable = true;
         }
     }
 
@@ -82,7 +91,6 @@ public class WebPageExtractor : MonoBehaviour
                     string v = input.Substring(start, end - start);
                     // finally parse into a float
                     //float value = float.Parse(v);
-                    Debug.Log("Width = " + v);
                     v = v.Substring(0, v.Length - 2);
                     m_width = int.Parse(v);
                 }
@@ -112,7 +120,6 @@ public class WebPageExtractor : MonoBehaviour
                     string v = input.Substring(start, end - start);
                     // finally parse into a float
                     //float value = float.Parse(v);
-                    Debug.Log("height = " + v);
                     v = v.Substring(0, v.Length - 2);
                     m_height = int.Parse(v);
                 }
@@ -142,7 +149,6 @@ public class WebPageExtractor : MonoBehaviour
                     string v = input.Substring(start, end - start);
                     // finally parse into a float
                     //float value = float.Parse(v);
-                    Debug.Log("Price = " + v);
                     v = v.Substring(0, v.Length - 9);
                     m_pricePerTile = float.Parse(v);
                 }
@@ -172,7 +178,6 @@ public class WebPageExtractor : MonoBehaviour
                     string v = input.Substring(start, end - start);
                     // finally parse into a float
                     //float value = float.Parse(v);
-                    Debug.Log("Finish = " + v);
                     m_finish = v;
                 }
                 else

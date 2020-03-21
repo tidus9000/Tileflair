@@ -185,6 +185,7 @@ public class MouseInputBuild : MonoBehaviour
                 if (m_manager.GetPreviousState() == GameManager.State.VIEW
                     || m_manager.GetPreviousState() == GameManager.State.PLACE)
                 {
+                    MakeWallsVisible(true);
                     m_floor.transform.position = defaultFloorPos;
                 }
                 if (Input.GetMouseButtonDown(0))
@@ -244,6 +245,7 @@ public class MouseInputBuild : MonoBehaviour
                 if (m_manager.GetPreviousState() == GameManager.State.VIEW
                     || m_manager.GetPreviousState() == GameManager.State.PLACE)
                 {
+                    MakeWallsVisible(true);
                     m_floor.transform.position = defaultFloorPos;
                 }
                 break;
@@ -251,6 +253,12 @@ public class MouseInputBuild : MonoBehaviour
                 if (m_manager.GetPreviousState() == GameManager.State.BUILD)
                 {
                     Destroy(m_startObj);
+                }
+                if (m_manager.GetPreviousState() == GameManager.State.BUILD ||
+                    m_manager.GetPreviousState() == GameManager.State.PAINT)
+                {
+                    //clear the wall cubes
+                    MakeWallsVisible(false);
                 }
                 if (m_manager.GetPreviousState() != GameManager.State.VIEW)
                 {
@@ -330,6 +338,12 @@ public class MouseInputBuild : MonoBehaviour
                 if (m_manager.GetPreviousState() == GameManager.State.BUILD)
                 {
                     Destroy(m_startObj);
+                }
+                if (m_manager.GetPreviousState() == GameManager.State.BUILD ||
+                    m_manager.GetPreviousState() == GameManager.State.PAINT)
+                {
+                    //clear the wall cubes
+                    MakeWallsVisible(false);
                 }
                 if (m_manager.GetPreviousState() != GameManager.State.VIEW)
                 {
@@ -523,5 +537,27 @@ public class MouseInputBuild : MonoBehaviour
                 break;
 
         }
+    }
+
+    /// <summary>
+    /// Function to make the wall object either visible or invisible.
+    /// used for switching states
+    /// </summary>
+    /// <param name="_value">make the walls visible or invisible</param>
+    void MakeWallsVisible(bool _value)
+    {
+        //go through the walls and enable or disable thier mesh renderer
+        foreach (Transform t in m_room.transform)
+        {
+            if (t.CompareTag("Wall"))
+            {
+                t.gameObject.GetComponent<MeshRenderer>().enabled = _value;
+            }
+        }
+    }
+
+    public GameObject GetRoom()
+    {
+        return m_room;
     }
 }

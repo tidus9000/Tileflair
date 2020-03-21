@@ -16,6 +16,7 @@ public class WallPainter : MonoBehaviour
     TileData m_activeTile;
     int m_activeTileIndex = 0;
     [SerializeField] GameObject m_tileButton;
+    [SerializeField]int[] m_gridSize = { 0, 0};
 
     // Start is called before the first frame update
     void Start()
@@ -153,39 +154,63 @@ public class WallPainter : MonoBehaviour
                 }
                 if (Input.GetMouseButtonDown(1))
                 {
-                    if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), 100f))
-                    {
-                        //Spawn an initial tile object
-                        m_posDown = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 4));
-                        m_testTile = GameObject.Instantiate(m_tileObj, m_posDown, Quaternion.identity);
+                    //Stuff for normal map tiles. Keeping commented out for the sake of documentation
+                    //if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), 100f))
+                    //{
+                    //    //Spawn an initial tile object
+                    //    m_posDown = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 4));
+                    //    m_testTile = GameObject.Instantiate(m_tileObj, m_posDown, Quaternion.identity);
 
-                        //Filter the texture of the active tile
-                        Texture2D filteredTex = NormalMapTools.FilterMedian(m_activeTile.m_texture, 6);
-                        //Create the normal map
-                        Texture normalTex = NormalMapTools.CreateNormalmap(filteredTex, 6);
+                    //    //Filter the texture of the active tile
+                    //    Texture2D filteredTex = NormalMapTools.FilterMedian(m_activeTile.m_texture, 6);
+                    //    //Create the normal map
+                    //    Texture normalTex = NormalMapTools.CreateNormalmap(filteredTex, 6);
 
-                        Renderer r = m_testTile.GetComponentInChildren<Renderer>();
-                        r.material.EnableKeyword("_NORMALMAP");
-                        //Change the texture to our active tile
-                        r.material.mainTexture = m_activeTile.m_texture;
-                        //Set the normal map
-                        r.material.SetTexture("_BumpMap", normalTex);
-                        //create and set the specular map
-                        Texture2D specularTex = NormalMapTools.CreateSpecular(filteredTex, 1.2f, 0.5f); // using filtered texture
-                        r.material.SetTexture("_SpecMap", specularTex);
+                    //    Renderer r = m_testTile.GetComponentInChildren<Renderer>();
+                    //    r.material.EnableKeyword("_NORMALMAP");
+                    //    //Change the texture to our active tile
+                    //    r.material.mainTexture = m_activeTile.m_texture;
+                    //    //Set the normal map
+                    //    r.material.SetTexture("_BumpMap", normalTex);
+                    //    //create and set the specular map
+                    //    Texture2D specularTex = NormalMapTools.CreateSpecular(filteredTex, 1.2f, 0.5f); // using filtered texture
+                    //    r.material.SetTexture("_SpecMap", specularTex);
 
-                        //Scale it down to the correct measurements
-                        //here we will read from a json file that
-                        m_testTile.GetComponentInChildren<Transform>().localScale =
-                            (new Vector3(m_activeTile.m_width / 10000, m_activeTile.m_height / 10000, 1.0f));
-                        m_mousedown = true;
-                    }
+                    //    //Scale it down to the correct measurements
+                    //    //here we will read from a json file that
+                    //    m_testTile.GetComponentInChildren<Transform>().localScale =
+                    //        (new Vector3(m_activeTile.m_width / 10000, m_activeTile.m_height / 10000, 1.0f));
+                    //    m_mousedown = true;
+                    //}
                 }
                 if (m_mousedown)
                 {
                     //Essentially want to make a grid of points based on the measurements of the tile
                     //m_posDown = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 10));
-                    m_testTile.transform.position = m_posDown;
+
+                    //m_testTile.transform.position = m_posDown;
+                    if (m_testTile && Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), 100f))
+                    {
+                        //Get the current position of the mouse
+                        Vector3 currentPos = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 10));
+                        int[] newGridSize = { 0, 0};
+                        //Check to see if the grid size should be increased
+                        //Calculate the desired size of grid compared to the current size of grid.
+                        for (float x = m_posDown.x; x < currentPos.x; x += m_activeTile.m_width / 1000)
+                        {
+                            newGridSize[0]++;
+                        }
+                        for (float y = m_posDown.y; y < currentPos.y; y += m_activeTile.m_height / 1000)
+                        {
+                            newGridSize[1]++;
+                        }
+
+                        //if the grid size has changed, make the visual changes
+                        if (newGridSize[0] != m_gridSize[0] || newGridSize[1] != m_gridSize[0])
+                        {
+                            m_gridSize = newGridSize;
+                        }
+                    }
                 }
                 if (Input.GetMouseButtonUp(0))
                 {
