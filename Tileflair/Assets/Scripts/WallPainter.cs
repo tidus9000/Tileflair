@@ -193,14 +193,16 @@ public class WallPainter : MonoBehaviour
                     {
                         //Get the current position of the mouse
                         Vector3 currentPos = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 10));
+                        Vector3 diff = (currentPos - m_posDown);
+                        
                         int[] newGridSize = { 0, 0};
                         //Check to see if the grid size should be increased
                         //Calculate the desired size of grid compared to the current size of grid.
-                        for (float x = m_posDown.x; x < currentPos.x; x += m_activeTile.m_width / 1000)
+                        for (float x = m_posDown.x; x < (m_posDown.x + Mathf.Abs(diff.x)); x += m_activeTile.m_width / 1000)
                         {
                             newGridSize[0]++;
                         }
-                        for (float y = m_posDown.y; y < currentPos.y; y += m_activeTile.m_height / 1000)
+                        for (float y = m_posDown.y; y < (m_posDown.y + Mathf.Abs(diff.y)); y += m_activeTile.m_height / 1000)
                         {
                             newGridSize[1]++;
                         }
@@ -209,6 +211,7 @@ public class WallPainter : MonoBehaviour
                         if (newGridSize[0] != m_gridSize[0] || newGridSize[1] != m_gridSize[0])
                         {
                             m_gridSize = newGridSize;
+
                         }
                     }
                 }
@@ -222,10 +225,38 @@ public class WallPainter : MonoBehaviour
                         Instantiate(tiles, Vector3.zero, Quaternion.identity);
                         tiles.name = "Tiles";
                         tiles.transform.parent = m_paintmanager.GetActiveWall().transform;
-                        //for some reason the increment has to be multiplied by 10. I don't know why but hey it works
-                        for (float x = m_posDown.x; x < m_posUp.x; x += m_activeTile.m_width / 1000)
+
+                        Vector3 startPoint;
+                        Vector3 endPoint;
+
+                        startPoint.z = m_posDown.z;
+                        endPoint.z = m_posDown.z;
+
+                        if (m_posDown.x < m_posUp.x)
                         {
-                            for (float y = m_posDown.y; y < m_posUp.y; y += m_activeTile.m_height / 1000)
+                            startPoint.x = m_posDown.x;
+                            endPoint.x = m_posUp.x;
+                        }
+                        else
+                        {
+                            startPoint.x = m_posUp.x;
+                            endPoint.x = m_posDown.x;
+                        }
+
+                        if (m_posDown.y < m_posUp.y)
+                        {
+                            startPoint.y = m_posDown.y;
+                            endPoint.y = m_posUp.y;
+                        }
+                        else
+                        {
+                            startPoint.y = m_posUp.y;
+                            endPoint.y = m_posDown.y;
+                        }
+                        //for some reason the increment has to be multiplied by 10. I don't know why but hey it works
+                        for (float x = startPoint.x; x < endPoint.x; x += m_activeTile.m_width / 1000)
+                        {
+                            for (float y = startPoint.y; y < endPoint.y; y += m_activeTile.m_height / 1000)
                             {
                                 m_testTile = GameObject.Instantiate(m_tileObj, new Vector3(x, y, 0), Quaternion.identity);
                                 //Change the texture to our active tile
