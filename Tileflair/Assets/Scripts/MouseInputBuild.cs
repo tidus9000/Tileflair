@@ -215,6 +215,11 @@ public class MouseInputBuild : MonoBehaviour
                 }
                 if (Input.GetMouseButtonUp(0))
                 {
+                    Vector3 closestPoint = m_grid.FindClosestPoint(Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 10)));
+                    if (closestPoint == m_startObj.transform.position)
+                    {
+                        Destroy(m_startObj.gameObject);
+                    }
                     ///*****
                     ///This was an old method I used for making the walls. It was bad but I'm keeping it here for the purposes of documentation
                     ///*****
@@ -541,7 +546,7 @@ public class MouseInputBuild : MonoBehaviour
 
     /// <summary>
     /// Function to make the wall object either visible or invisible.
-    /// used for switching states
+    /// and rotates walls so they are pointing inward
     /// </summary>
     /// <param name="_value">make the walls visible or invisible</param>
     void MakeWallsVisible(bool _value)
@@ -552,6 +557,7 @@ public class MouseInputBuild : MonoBehaviour
             if (t.CompareTag("Wall"))
             {
                 t.gameObject.GetComponent<MeshRenderer>().enabled = _value;
+                t.gameObject.GetComponent<Wall>().RotateCorrect();
             }
         }
     }
