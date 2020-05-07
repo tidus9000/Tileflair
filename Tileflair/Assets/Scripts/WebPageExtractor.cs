@@ -92,6 +92,7 @@ public class WebPageExtractor : MonoBehaviour
                     // finally parse into a float
                     //float value = float.Parse(v);
                     v = v.Substring(0, v.Length - 2);
+                    //Debug.Log("width as string: " + v);
                     m_width = int.Parse(v);
                 }
                 else
@@ -121,6 +122,7 @@ public class WebPageExtractor : MonoBehaviour
                     // finally parse into a float
                     //float value = float.Parse(v);
                     v = v.Substring(0, v.Length - 2);
+                    //Debug.Log("height as string: " + v);
                     m_height = int.Parse(v);
                 }
                 else
@@ -134,12 +136,13 @@ public class WebPageExtractor : MonoBehaviour
             }
 
             //find price per tile
-            search = ">                                                            £";
+            search = " per tile";
             p = input.IndexOf(search);
             if (p >= 0)
             {
                 // move forward to the value
-                int start = p + search.Length;
+                //int start = p + search.Length;
+                int start = p - 4;
                 // now find the end by searching for the next closing tag starting at the start position, 
                 // limiting the forward search to the max value length
                 int end = input.IndexOf("</label>", start);
@@ -149,7 +152,9 @@ public class WebPageExtractor : MonoBehaviour
                     string v = input.Substring(start, end - start);
                     // finally parse into a float
                     //float value = float.Parse(v);
-                    v = v.Substring(0, v.Length - 9);
+                    v = v.Substring(0, 4);
+                    //Debug.Log("price as string: " + v);
+                    //Debug.Log("String length: " + v.Length);
                     m_pricePerTile = float.Parse(v);
                 }
                 else
@@ -178,6 +183,7 @@ public class WebPageExtractor : MonoBehaviour
                     string v = input.Substring(start, end - start);
                     // finally parse into a float
                     //float value = float.Parse(v);
+                    //Debug.Log("finish as string: " + v);
                     m_finish = v;
                 }
                 else
